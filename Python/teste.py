@@ -1,23 +1,32 @@
 import psycopg2
 from DAO.CLASSESMEDICO import funcionario 
-
-
 nomebanco = "Medico"
 senha = 'postgres'
 usuario = 'postgres'
-
 conn = psycopg2.connect(dbname = nomebanco, password = senha, user = usuario)
-cursor = conn.cursor()
-
-cursor.execute("""
-SELECT * from Funcionario
-
-""")
 
 
-A = cursor.fetchall()
+# def correcao_erro_id(ID:str, conn):
+#     cursor1 = conn.cursor()    
+#     cursor1.execute(""" SELECT ID_Funcionario from funcionario
+#     """)
+#     IDS = cursor1.fetchall()
+#     cursor1.close()
 
-teste = funcionario(A[0],A[1],A[2],A[3],A[4],A[5],A[6],A[7],A[8],A[9],A[10],A[11])
+#     while not ID.isnumeric() or (ID  in IDS):
+#         if not ID.isnumeric():
+#                 print("Valor inválido! ID precisar ser inteiro")
+#                 ID = input("ID DO FUNCIONÁRIO: ")
+#         elif ID in IDS:
+#                 print("Valor inválido! ID já existe na lista de funcionarios")
+#                 ID = input("ID DO FUNCIONÁRIO: ")
+#     return ID
 
-print(teste)
-cursor.close()
+
+# ID_FUNCIONARIO = input("ID DO FUNCIONÁRIO: ")
+# ID_FUNCIONARIO = correcao_erro_id(ID_FUNCIONARIO)
+
+
+TEL = '85981476350'
+
+print(f'({TEL[0:2]}) {TEL[2:7]}-{TEL[7:]}')
