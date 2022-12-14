@@ -45,7 +45,7 @@ class exame():
         self.DIAGNOSTICO = DIAGNOSTICO
 
 class consulta():
-    def init(self,COD_CONS,CPF_PAC,ID_MED,DATA,HORA,TIPO_RECEITA):
+    def __init__(self,COD_CONS,CPF_PAC,ID_MED,DATA,HORA,TIPO_RECEITA):
 
         self.COD_CONS = COD_CONS
         self.CPF_PAC = CPF_PAC

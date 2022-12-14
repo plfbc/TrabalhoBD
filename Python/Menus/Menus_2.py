@@ -8,7 +8,21 @@ def continuar():
     escolha = input(print('Digite Enter para continuar\n'))
     return ''
 
+
+def ver_planos_conv(cnpj_conv, conn):
+    cursor_2 = conn.cursor()
+
+
+    print("        Planos ofertados: ")
+    cursor_2.execute(f"""
+    Select Nome from plano_ofertado
+    where cnpj_conv = '{cnpj_conv}'
+    """)
     
+    planos = cursor_2.fetchall()
+
+    return planos   
+
 def verif_conv_pac(cnpj_conv, conn):
     cursor_1 = conn.cursor()
     cursor_1.execute(f"""
@@ -20,19 +34,6 @@ def verif_conv_pac(cnpj_conv, conn):
 
     
     cursor_1.close()
-
-    cursor_2 = conn.cursor()
-
-
-    print("        Planos ofertados: ")
-    cursor_2.execute(f"""
-    Select Nome from plano_ofertado
-    where cnpj_conv = '{cnpj_conv}'
-    """)
-    
-    planos = cursor_2.fetchall()
-    for plano in planos:
-        print(f"        Nome do plano : {plano[0]}")    
 
     return Conv[0][0]
 #Formula Query
@@ -200,8 +201,11 @@ def verif_paciente(conn):
         Nome do Paciente: {resultado[2]}
         Data de Nascimento do paciente: {resultado[3].year}-{resultado[3].month}-{resultado[3].day}
         telefone de contato: {resultado[10]}
-        Convenio do Paciente: {verif_conv_pac(resultado[4], conn)}      
+        Convenio do Paciente: {verif_conv_pac(resultado[4], conn)}    
         """)
+        planos = ver_planos_conv(resultado[4],conn)
+        for plano in planos:
+            print(f'        {plano[0]}')
         
     cursor.close()
     continuar()
@@ -232,7 +236,8 @@ def verif_medicamento(conn):
         print(Err)
 
     for resultado in resultados:
-        print(f"""Codigo do Medicamento: {resultado[0]}
+        print(f"""-------------------------------------------------------
+        Codigo do Medicamento: {resultado[0]}
         Quantidade Disponível: {resultado[1]}
         Nome do Medicamento: {resultado[2]}
         Tipo do Medicamento: {resultado[3]}""")

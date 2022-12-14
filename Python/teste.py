@@ -27,6 +27,6 @@ conn = psycopg2.connect(dbname = nomebanco, password = senha, user = usuario)
 # ID_FUNCIONARIO = correcao_erro_id(ID_FUNCIONARIO)
 
 
-TEL = '85981476350'
+A = input('teste: ')
 
-print(f'({TEL[0:2]}) {TEL[2:7]}-{TEL[7:]}')
+print([A,A])
