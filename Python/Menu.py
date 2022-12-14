@@ -77,19 +77,19 @@ def Menu_2(conn):
         match escolha:
             case 1:
                 Menus_2.verif_consulta(conn)
-                pass
+                
 
             case 2:
                 Menus_2.verif_paciente(conn)
-                pass
+                
 
             case 3:
                 Menus_2.verif_medicamento(conn)
-                pass
+                
 
             case 4:
                 Menus_2.verif_funcionario(conn)
-                pass
+                
 
             case 5:
                 return

@@ -42,7 +42,6 @@ def escolha_cargo():
 def ver_planos_conv(cnpj_conv, conn):
     cursor_2 = conn.cursor()
 
-    print("        Planos ofertados: ")
     cursor_2.execute(f"""
     Select Nome from plano_ofertado
     where cnpj_conv = '{cnpj_conv}'
@@ -50,8 +49,10 @@ def ver_planos_conv(cnpj_conv, conn):
     
     planos = cursor_2.fetchall()
 
+    planos = [planos[i][0] for i in range(len(planos))]
+
     cursor_2.close()
-    return planos 
+    return planos  
 
 #Correção de Erro das Inserções
 def correcao_erro_id(ID:str, conn):
@@ -216,7 +217,7 @@ def correcao_erro_COD_MED(COD_MEDICAMENTO, conn):
 
 def correcao_erro_COD_CONS(CPF_PAC, conn):
 
-    CPF_PAC = converte_cpf(CPF_PAC)
+    
     
     cursor1 = conn.cursor()    
     cursor1.execute(f""" SELECT COD_CONS from CONSULTA WHERE CPF_PAC = {CPF_PAC}
@@ -268,45 +269,23 @@ def correcao_chave_COD_CONS(COD_CONS, conn):
 
 def correcao_referencia_CNPJ(conn):
     cursor1 = conn.cursor()
-    
-    #cursor1.execute("""
-    #SELECT CNPJ_conv,nome_conv, nome FROM CONVENIO natural join Plano_Ofertado order by nome_conv
-    #""")
 
     cursor1.execute("SELECT DISTINCT cnpj_conv from plano_ofertado")
     
     cnpjs = cursor1.fetchall()
-    cursor1.close()
-
-    #cursor2 = conn.cursor()prin    print("Lista de Convenios cadastrados: ")
     
     for i in range(len(cnpjs)):
-        print(f"[{i}] CNPJ: {cnpjs[i]}, Planos Oferecidos: {ver_planos_conv(cnpjs[i], conn)}")
+        print(f"[{i}] CNPJ: {cnpjs[i][0]}, Planos Oferecidos: {ver_planos_conv(cnpjs[i][0], conn)}")
     
-    escolhido = int(input("Selecione o cnpj relacionado ao plano que possui: "))
+    escolhido = int(input("Selecione o CNPJ relacionado ao plano que possui: "))
 
     while(escolhido >= len(cnpjs) or escolhido < 0):
-        print("O índice escolhido não está relacionado com nenhum dos convênios disponíveis, tente novamente.")
+        print("\nERRO: O índice escolhido não está relacionado com nenhum dos convênios disponíveis, tente novamente.")
         escolhido = int(input("Selecione o número relacionado ao convênio que possui: "))
     
-    escolhido = cnpjs[escolhido]
-    #escolhido = convenios[escolhido][0].replace('.','').replace('-','').replace('/','')
+    escolhido = cnpjs[escolhido][0]
     
-    '''
-    convenio_list = []
-    for convenio in convenios:
-        convenio_list.append(convenio[0].replace('.','').replace('-','').replace('/',''))
-
-        print(f'Convenio: {convenio[1]}, CNPJ: {convenio[0]}, Plano Oferecido: {convenio[2]}')
-
-    escolhido = ''
-
-    while escolhido not in convenio_list:
-        escolhido = input("CNPJ do Convenio do paciente (apenas digitos): ")
-        if escolhido not in convenio_list:
-            print("CNPJ não consta entre os dados existentes, por favor escolhar outro")
-    '''
-    return f"{escolhido}"
+    return f"'{escolhido}'"
 
 
 def correcao_chave_pac(conn):
@@ -463,7 +442,7 @@ def cadastrar_paciente(conn):
 
     COMPLEMENTO = str(input("Complemento do endereço do Paciente: "))
 
-    NUMERO = str(input("NÚMERO do Paciente: "))
+    NUMERO = str(input("Número do Paciente: "))
 
     TELEFONE1 = str(input("Primeiro número de telefone do Paciente: "))
     TELEFONE1 = correcao_erro_tel(TELEFONE1)
@@ -479,14 +458,14 @@ def cadastrar_paciente(conn):
         TELEFONE2 = 'Null'   
     else: TELEFONE2 = converte_tel(TELEFONE2)
 
-    temp = CLASSESMEDICO.paciente(CPF_PAC,NOME, SEXO, DATA_DE_NASC, CNPJ_CONV, CEP, RUA, BAIRRO, COMPLEMENTO, NUMERO, TELEFONE1, TELEFONE2)
+    temp = CLASSESMEDICO.paciente(CPF_PAC, SEXO, NOME, DATA_DE_NASC, CNPJ_CONV, CEP, RUA, BAIRRO, COMPLEMENTO, NUMERO, TELEFONE1, TELEFONE2)
     
     cursor = conn.cursor()
 
     try :
         cursor.execute(f"""
         INSERT INTO PACIENTE(CPF_PAC, NOME, SEXO, DATA_DE_NASC, CNPJ_CONV, CEP, RUA, BAIRRO, COMPLEMENTO, NUMERO, TELEFONE1, TELEFONE2) 
-        VALUES ({temp.CPF_PAC},{temp.NOME},{temp.SEXO},'{temp.DATA_DE_NASC[2]}-{temp.DATA_DE_NASC[1]}-{temp.DATA_DE_NASC[0]}',{temp.CNPJ_CONV},{temp.CEP},
+        VALUES ({temp.CPF_PAC},'{temp.NOME}','{temp.SEXO}','{temp.DATA_DE_NASC[2]}-{temp.DATA_DE_NASC[1]}-{temp.DATA_DE_NASC[0]}',{temp.CNPJ_CONV},{temp.CEP},
         '{temp.RUA}', '{temp.BAIRRO}','{temp.COMPLEMENTO}',{temp.NUMERO},{temp.TELEFONE1},{temp.TELEFONE2})
         """)
 
@@ -529,6 +508,7 @@ def cadastrar_medicamento(conn):
        
     cursor.close()
     
+
 def marcar_consulta(conn):
     cursor1 = conn.cursor()
     cursor1.execute("""
@@ -545,6 +525,8 @@ def marcar_consulta(conn):
 
     CPF_PAC = str(input("CPF do paciente apenas dígitos: "))
     CPF_PAC = pegar_CPF_pac(conn, CPF_PAC)
+
+    CPF_PAC = converte_cpf(CPF_PAC)
 
     COD_CONS = input("Qual O Codigo da consulta?: ")
     COD_CONS = correcao_chave_COD_CONS(COD_CONS,conn)
@@ -577,15 +559,15 @@ def marcar_consulta(conn):
 
     TIPO_RECEITA = str(input("Tipo de Receita do Paciente: "))
 
-    temp = CLASSESMEDICO.consulta(CPF_PAC,COD_CONS, ID_MED, DATA, HORA, TIPO_RECEITA)
+    temp = CLASSESMEDICO.consulta(COD_CONS, CPF_PAC, ID_MED, DATA, HORA, TIPO_RECEITA)
     
     cursor = conn.cursor()
 
     try :
         cursor.execute(f"""
-        INSERT INTO CONSULTA(CPF_PAC, COD_CONS, ID_MED, DATA, CPF, TIPO_RECEITA) 
+        INSERT INTO CONSULTA(CPF_PAC, COD_CONS, ID_MED, DATA, HORA ,TIPO_RECEITA) 
         VALUES ({temp.CPF_PAC},{temp.COD_CONS},{temp.ID_MED},'{temp.DATA[2]}-{temp.DATA[1]}-{temp.DATA[0]}',
-        '{temp.HORA[0]}-{temp.HORA[1]}-{temp.HORA[2]}',{temp.TIPO_RECEITA})
+        '{temp.HORA[0]}:{temp.HORA[1]}','{temp.TIPO_RECEITA}')
         """)
 
         print("Consulta Registrada")
@@ -628,19 +610,19 @@ def marcar_exame(conn):
     DATA = input("Data do Exame (Formato DD/MM/AAAA): ").split('/')
     DATA = correcao_erro_data(DATA)
 
-    HORA = [(input("Hora da consulta: ")), (input("Minuto da consulta: "))]
+    HORA = [(input("Hora do exame: ")), (input("Minuto do exame: "))]
 
     DIAGNOSTICO = str(input("Diagnóstico do paciente: "))
 
-    temp = CLASSESMEDICO.exame(CPF_PAC,COD_CONS, TIPO, DATA, HORA, DIAGNOSTICO)
+    temp = CLASSESMEDICO.exame(COD_CONS, TIPO, DATA, HORA,CPF_PAC, DIAGNOSTICO)
     
     cursor = conn.cursor()
 
     try :
         cursor.execute(f"""
         INSERT INTO EXAME(CPF_PAC, COD_CONS, TIPO, DATA, HORA, DIAGNOSTICO) 
-        VALUES ({temp.CPF_PAC},{temp.COD_CONS},{temp.TIPO},'{temp.DATA[2]}-{temp.DATA[1]}-{temp.DATA[0]}',
-        '{temp.HORA[0]}:{temp.HORA[1]}',{temp.DIAGNOSTICO})
+        VALUES ({temp.CPF_PAC},{temp.COD_CONS},'{temp.TIPO}','{temp.DATA[2]}-{temp.DATA[1]}-{temp.DATA[0]}',
+        '{temp.HORA[0]}:{temp.HORA[1]}','{temp.DIAGNOSTICO}')
         """)
 
         print("Exame Registrado")
@@ -650,3 +632,10 @@ def marcar_exame(conn):
         print(Err)
 
     cursor.close()
+
+
+
+def adicionar_receita(conn):
+    pass
+def alocar_enfermeira(conn):
+    pass

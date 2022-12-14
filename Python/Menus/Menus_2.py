@@ -5,8 +5,8 @@ import psycopg2
 #Função auxiliar:
 def continuar():
 
-    escolha = input(print('Digite Enter para continuar\n'))
-    return ''
+    input('Digite Enter para continuar\n')
+ 
 
 
 def ver_planos_conv(cnpj_conv, conn):
@@ -169,6 +169,7 @@ Cod_Cons: {resul_1[0]}
     cursor_2.close()
     cursor_3.close()
     continuar()
+
 
 def verif_paciente(conn):
 
