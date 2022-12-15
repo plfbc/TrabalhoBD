@@ -2,7 +2,7 @@ from psycopg2 import  connect
 
 
 def conection():
-    nomebanco = "postgres"
-    senha = 'admlila'
+    nomebanco = "Medico"
+    senha = 'postgres'
     usuario = 'postgres'
     return connect(dbname = nomebanco, password = senha, user = usuario)
