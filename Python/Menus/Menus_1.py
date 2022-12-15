@@ -391,7 +391,7 @@ def cadastrar_funcionario(conn):
     try :
         cursor.execute(f"""
         INSERT INTO FUNCIONARIO(ID_FUNCIONARIO, CARGO, SEXO, DATA_DE_NASC, CPF, SALARIO, NOME, CRE, CRM, MEDIA_Av, TELEFONE1, TELEFONE2) 
-        VALUES ({temp.ID_FUNCIONARIO},'{temp.CARGO}','{temp.SEXO}','{temp.DATA_DE_NASC[2]}-{temp.DATA_DE_NASC[1]}-{temp.DATA_DE_NASC[0]}','{temp.CPF}',{temp.SALARIO},
+        VALUES ({temp.ID_FUNCIONARIO},'{temp.CARGO}','{temp.SEXO}','{temp.DATA_DE_NASC[2]}-{temp.DATA_DE_NASC[1]}-{temp.DATA_DE_NASC[0]}',{temp.CPF},{temp.SALARIO},
         '{temp.NOME}', {temp.CRE},{temp.CRM},{temp.MEDIA_Av},{temp.TELEFONE1},{temp.TELEFONE2})
         """)
 

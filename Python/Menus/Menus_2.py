@@ -46,22 +46,20 @@ def form_consulta(Cod_cons):
         where cons.cod_cons = '{Cod_cons}'
         and med.id_funcionario = cons.id_med
         and pac.cpf_pac = cons.cpf_pac
-
     """)
 
     query2 = (f"""
             Select tipo from exame 
             where cod_cons = '{Cod_cons}'
-            
     """)
 
     query3 = (f"""
                 Select descricao from prescreve 
                 where cod_cons = '{Cod_cons}'
-                
                 """)
     
     lista_querys = [query1, query2, query3]
+    
     return lista_querys
     
 
@@ -110,11 +108,9 @@ def verif_consulta(conn):
     SELECT COD_CONS from CONSULTA""")
     
     consultas = cursor1.fetchall()
-    print("Lista de Cod´s de consulta:\n")
+    print("Lista de Códs de consulta:\n")
     for cods in consultas:
-        print(f"""
-        Cod_Consulta:{cods[0]}\n
-        """)
+        print(f"Cod_Consulta:{cods[0]}\n")
         lista_cons.append(cods[0])
     cursor1.close()
 
@@ -202,7 +198,7 @@ def verif_paciente(conn):
         Nome do Paciente: {resultado[2]}
         Data de Nascimento do paciente: {resultado[3].year}-{resultado[3].month}-{resultado[3].day}
         telefone de contato: {resultado[10]}
-        Convenio do Paciente: {verif_conv_pac(resultado[4], conn)}    
+        Convenio do Paciente: {verif_conv_pac(resultado[4], conn)}
         """)
         planos = ver_planos_conv(resultado[4],conn)
         for plano in planos:
@@ -290,4 +286,3 @@ Id do Funcionário:{resultado[0]}
     
     cursor.close()
     continuar()
-
