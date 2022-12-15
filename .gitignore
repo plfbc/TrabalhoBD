@@ -1,0 +1,4 @@
+# Ignora o arquivo Conection, na pasta Python, pois ele muda no meu pc
+Python/Conection.py
+# Ignora todos os arquivos em pastas __pycache__
+__pycache__
